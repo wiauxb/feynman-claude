@@ -59,18 +59,21 @@ alpha login
 
 The research agents use `alpha search|get|ask|code` via Bash when the MCP isn't present.
 
-### No marketplace? Skills-directory fallback
+### No marketplace? Directory fallback
 
 To use it in one project without a marketplace, copy the plugin into the project's skills dir:
 
 ```
-cp -r plugins/feynman /path/to/project/.claude/skills/feynman
+cp -r plugins/feynman/agents plugins/feynman/commands plugins/feynman/skills /path/to/project/.claude
 ```
 
 It auto-loads (after the workspace-trust prompt). Add the alphaXiv MCP manually:
 `claude mcp add --transport http alphaxiv https://api.alphaxiv.org/mcp/v1`.
 
 ## Updating from upstream (deliberate, never automatic)
+
+I will update this repo from time to time, but if you cannot wait to get the fresh upstream updates,
+you can follow the here-under instructions.
 
 The upstream Feynman is a **frozen submodule** — the recorded commit SHA is the freeze. To take a new
 upstream version:
@@ -79,7 +82,6 @@ upstream version:
 cd feynman && git fetch origin && git checkout <reviewed-commit> && cd ..
 git add feynman                 # re-pin the gitlink to the reviewed commit
 python3 generate.py             # regenerate commands/agents/skills
-git diff plugins/feynman        # review what changed before committing
 ```
 
 Never `git submodule update --remote` blindly — review the upstream diff first. The plugin-wrapper
