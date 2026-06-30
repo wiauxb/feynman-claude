@@ -36,6 +36,15 @@ Then **authenticate the alphaXiv MCP once** (see below), and restart Claude Code
 
 ### Authenticate the alphaXiv MCP (one-time, free account)
 
+#### The quick route
+
+Ask Claude for the valid URL, something like this:
+```
+apply the workaround described in the wiauxb/feynman marketplace README, give me the url to connect to the mcp
+```
+
+#### The workaround
+
 The plugin declares the alphaXiv MCP. On first connect, Claude Code runs an OAuth flow to your free
 alphaXiv account. **Known snag:** Claude Code requests the `offline_access` scope, which alphaXiv
 rejects (`invalid_scope`). Work around it:
