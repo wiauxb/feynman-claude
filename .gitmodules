@@ -1,3 +1,6 @@
+# Upstream Feynman, pinned to a reviewed commit. The gitlink SHA recorded in the
+# superproject IS the freeze — update deliberately (fetch -> checkout reviewed SHA
+# -> git add feynman -> regenerate -> diff), never `submodule update --remote`.
 [submodule "feynman"]
 	path = feynman
-	url = ../feynman
+	url = https://github.com/companion-inc/feynman.git

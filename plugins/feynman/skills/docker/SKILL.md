@@ -12,7 +12,7 @@ Run research code inside Docker containers while Feynman stays on the host. The 
 - User selects "Docker Sandbox" as the execution environment in `/replicate` or `/autoresearch`
 - Running untrusted code from a paper's repository
 - Experiments that install packages or modify system state
-- Any time the user asks to run something "safely" or "isolated"
+- Any time the user asks to run research code safely or isolated for a Feynman workflow
 
 ## How it works
 

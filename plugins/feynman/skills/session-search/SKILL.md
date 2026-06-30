@@ -1,11 +1,11 @@
 ---
 name: session-search
-description: Search past Feynman session transcripts to recover prior work, conversations, and research context. Use when the user references something from a previous session, asks "what did we do before", or when you suspect relevant past context exists.
+description: Recover prior Feynman work from session transcripts. Use the optional /search command only when it is installed and visible; otherwise search local session JSONL files directly.
 ---
 
 # Session Search
 
-Use the `/search` command to search prior Feynman sessions interactively, or search session JSONL files directly via bash.
+Use the `/search` command to search prior Feynman sessions interactively only when the optional session-search package is installed and the command is visible. Otherwise, search session JSONL files directly via bash.
 
 ## Interactive search
 
@@ -13,7 +13,7 @@ Use the `/search` command to search prior Feynman sessions interactively, or sea
 /search <query>
 ```
 
-Opens the session search UI. Supports `resume <sessionPath>` to continue a found session.
+Opens the session search UI when the optional package is loaded. Supports `resume <sessionPath>` to continue a found session.
 
 ## Direct file search
 
@@ -23,4 +23,4 @@ Session transcripts are stored as JSONL files in `~/.feynman/sessions/`. Each li
 grep -ril "scaling laws" ~/.feynman/sessions/
 ```
 
-For structured search across sessions, use the interactive `/search` command.
+For structured search across sessions, use the interactive `/search` command when it is visible. If it is unavailable, direct file search is the supported fallback.

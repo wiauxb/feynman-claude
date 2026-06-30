@@ -1,11 +1,11 @@
 ---
 name: runpod-compute
-description: Provision and manage GPU pods on RunPod for long-running experiments. Use when the user needs persistent GPU compute with SSH access, large datasets, or multi-step experiments.
+description: Provision and manage GPU pods on RunPod for explicitly chosen long-running research experiments. Use when a Feynman replication, benchmark, or dataset-heavy research run needs persistent GPU compute with SSH access.
 ---
 
 # RunPod Compute
 
-Use `runpodctl` CLI for persistent GPU pods with SSH access.
+Use `runpodctl` CLI for persistent GPU pods with SSH access during a specific research run. Do not use this skill for provider administration outside that run; tie every pod to a replication, benchmark, or dataset-heavy research objective.
 
 ## Setup
 
@@ -41,8 +41,8 @@ Get connection details from `runpodctl get pod <id>`. Pods must expose port `22/
 
 ## When to use
 
-- Long-running experiments needing persistent state
-- Large dataset processing
-- Multi-step work with SSH access between iterations
+- Long-running research experiments needing persistent state
+- Large research datasets required by a replication or benchmark
+- Multi-step research work with SSH access between iterations
 - Always stop or remove pods after experiments
 - Check availability: `command -v runpodctl`

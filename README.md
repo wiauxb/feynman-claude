@@ -1,222 +1,107 @@
-# Feynman for GitHub Copilot CLI
+# Feynman for Claude Code
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Skills](https://img.shields.io/badge/Skills-18-blue)](plugins/feynman/skills)
-[![Agents](https://img.shields.io/badge/Agents-5-purple)](plugins/feynman/agents)
-[![Source](https://img.shields.io/badge/Source-getcompanion--ai%2Ffeynman-orange)](https://github.com/getcompanion-ai/feynman)
+A port of the [Feynman](https://www.feynman.is/) research agent to **Claude Code**, packaged as a
+plugin. It brings Feynman's deep-research workflow — plan → gather (parallel subagents) → draft →
+cite → adversarial review → deliver, with provenance — to Claude Code, backed by the **alphaXiv MCP**
+for academic paper search. No Anthropic API key required: it runs on your Claude Code subscription.
 
-> **Thin wrapper around [Feynman](https://github.com/getcompanion-ai/feynman) that auto-generates Copilot CLI-compatible skills and agents from the upstream source. No content is duplicated — a Python generator reads the feynman submodule and produces adapted SKILL.md / agent .md files at install time.**
+Generated from upstream `companion-inc/feynman` (a pinned git submodule) by `generate.py`, which
+rewrites Pi-runtime tools to Claude Code tools + the alphaXiv MCP.
 
-## How it works
+## What you get
 
-This repo includes the [feynman](https://github.com/getcompanion-ai/feynman) repo as a **git submodule**. A `generate.py` script reads the original skills, prompts, and agent definitions, then:
+- **13 commands** — `/feynman:deepresearch`, `/feynman:lit`, `/feynman:review`, `/feynman:audit`,
+  `/feynman:compare`, `/feynman:replicate`, `/feynman:draft`, `/feynman:recipe`, `/feynman:summarize`,
+  `/feynman:autoresearch`, `/feynman:watch`, `/feynman:log`, `/feynman:jobs`.
+- **5 agents** — `feynman` (lead) + `feynman-researcher`, `feynman-verifier`, `feynman-reviewer`,
+  `feynman-writer` subagents.
+- **20 skills** — auto-triggering research capabilities (deep-research, literature-review, paper-writing,
+  peer-review, paper-code-audit, source-comparison, replication, alpha-research, …).
+- The **alphaXiv MCP** (`https://api.alphaxiv.org/mcp/v1`), declared in the plugin so it auto-registers
+  on install.
 
-1. **Self-contained skills** (7) are copied with Copilot CLI YAML frontmatter added
-2. **Prompt-referenced skills** (11) have their `prompts/*.md` content inlined with Pi-specific tool references replaced by Copilot CLI equivalents
-3. **Agent profiles** (5) are adapted from `.feynman/agents/*.md` and `.feynman/SYSTEM.md`
+## Install
 
-When feynman updates, just re-run the installer — the generator picks up changes automatically.
-
-## Installation
-
-### Method 1 — Native plugin marketplace (recommended)
-
-```bash
-copilot plugin marketplace add Maverobot/feynman-copilot
-copilot plugin install feynman@feynman-copilot
-```
-
-### Method 2 — One command
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/Maverobot/feynman-copilot/main/install.sh | bash
-```
-
-**Requirements:** git, python3
-
-### Method 3 — Manual / development
-
-```bash
-git clone --recurse-submodules https://github.com/Maverobot/feynman-copilot.git
-cd feynman-copilot
-python3 generate.py   # regenerates plugins/feynman/ from the feynman submodule
-./install.sh          # or manually symlink to ~/.copilot/
-```
-
-### Verify
-
-Start a new Copilot CLI session and run:
+Add the marketplace, then install at the scope you want. **The project-vs-global choice is made here at
+install time** — there is no separate installer.
 
 ```
-/skills list
+/plugin marketplace add wiauxb/feynman-claude            # this repo
+/plugin install feynman@feynman-claude --scope project   # this project only
+/plugin install feynman@feynman-claude --scope user      # all your projects (global)
+/plugin install feynman@feynman-claude --scope local     # this project, private (gitignored)
 ```
 
-You should see all 18 Feynman skills. Check agents with `/agent`.
+Then **authenticate the alphaXiv MCP once** (see below), and restart Claude Code so the plugin loads.
 
-### Optional: Install alpha CLI for paper search
+### Authenticate the alphaXiv MCP (one-time, free account)
 
-```bash
-npm install -g @companion-ai/alpha-hub
+The plugin declares the alphaXiv MCP. On first connect, Claude Code runs an OAuth flow to your free
+alphaXiv account. **Known snag:** Claude Code requests the `offline_access` scope, which alphaXiv
+rejects (`invalid_scope`). Work around it:
+
+1. Run `/mcp` → select **alphaxiv** → **Authenticate**. If it errors with `invalid_scope: offline_access`,
+   copy the authorization URL it produced.
+2. Re-open that URL with `&scope=email+profile` (delete `+offline_access` from the `scope=` parameter),
+   and approve in the browser.
+3. The localhost callback completes the flow; `/mcp` then shows **alphaxiv → connected**.
+
+This is an alphaXiv-account login only — unrelated to any Anthropic API access.
+
+### Fallback: the `alpha` CLI
+
+If you'd rather not use the MCP (or it's unavailable), the workflows fall back to the `alpha` CLI:
+
+```
+npm i -g @companion-ai/alpha-hub
 alpha login
 ```
 
-## What's Included
+The research agents use `alpha search|get|ask|code` via Bash when the MCP isn't present.
 
-### 18 Research Skills
+### No marketplace? Skills-directory fallback
 
-| Skill | When it activates |
-|-------|-------------------|
-| **deep-research** | Deep investigation on any topic — plans, delegates, verifies, cites |
-| **literature-review** | Lit review with paper triage and primary-source synthesis |
-| **paper-writing** | Turn research findings into paper-style drafts with citations |
-| **peer-review** | Simulated peer review with severity levels and inline annotations |
-| **paper-code-audit** | Compare paper claims against public code for mismatches |
-| **source-comparison** | Compare multiple sources with grounded agreement/disagreement matrix |
-| **replication** | Plan or execute reproductions of papers and benchmarks |
-| **alpha-research** | Search, read, and query academic papers via alpha CLI |
-| **eli5** | Explain research in plain English with analogies |
-| **autoresearch** | Autonomous experiment loop: edit → benchmark → keep/revert → repeat |
-| **docker** | Run research code safely in isolated Docker containers |
-| **modal-compute** | Serverless GPU workloads via Modal |
-| **runpod-compute** | Persistent GPU pods via RunPod |
-| **watch** | Baseline sweep + watch script for recurring research monitoring |
-| **preview** | Render Markdown/LaTeX/PDF artifacts for visual review |
-| **session-log** | Capture work, findings, open questions, and next steps |
-| **session-search** | Search past session transcripts for prior context |
-| **jobs** | Inspect background processes, plans, and ongoing work |
-
-### 5 Custom Agents
-
-| Agent | Description |
-|-------|-------------|
-| **feynman** | Lead research agent — plans, delegates, synthesizes, and delivers |
-| **researcher** | Evidence-gathering subagent with strict integrity rules |
-| **reviewer** | Skeptical but fair peer reviewer with inline annotations |
-| **writer** | Turns research notes into structured briefs and drafts |
-| **verifier** | Post-processes drafts with inline citations and URL verification |
-
-## Usage
-
-Skills activate automatically when Copilot detects relevance. You can also invoke them explicitly:
+To use it in one project without a marketplace, copy the plugin into the project's skills dir:
 
 ```
-Use the /deep-research skill to investigate transformer scaling laws
-Use the /literature-review skill to survey attention mechanism efficiency
-Use the /peer-review skill to review my draft at papers/my-paper.md
-Use the /eli5 skill to explain 2106.09685
+cp -r plugins/feynman /path/to/project/.claude/skills/feynman
 ```
 
-### Select the Feynman agent directly
+It auto-loads (after the workspace-trust prompt). Add the alphaXiv MCP manually:
+`claude mcp add --transport http alphaxiv https://api.alphaxiv.org/mcp/v1`.
+
+## Updating from upstream (deliberate, never automatic)
+
+The upstream Feynman is a **frozen submodule** — the recorded commit SHA is the freeze. To take a new
+upstream version:
 
 ```
-/agent
-→ select "feynman"
+cd feynman && git fetch origin && git checkout <reviewed-commit> && cd ..
+git add feynman                 # re-pin the gitlink to the reviewed commit
+python3 generate.py             # regenerate commands/agents/skills
+git diff plugins/feynman        # review what changed before committing
 ```
 
-Or reference it in a prompt:
+Never `git submodule update --remote` blindly — review the upstream diff first. The plugin-wrapper
+files (`.claude-plugin/plugin.json`, `.mcp.json`, this README, the root `marketplace.json`) are static
+and are not touched by `generate.py`.
 
-```
-Use the feynman agent to investigate the current state of mixture-of-experts architectures
-```
+## How the port works
 
-### Typical Research Workflow
+`generate.py` reads the submodule's `prompts/`, `skills/`, `.feynman/agents/`, and `.feynman/SYSTEM.md`
+and applies three rewrite layers:
 
-1. **Deep Research** → "Investigate scaling laws for sparse models"
-2. **Literature Review** → Focused paper survey on the topic
-3. **Paper Writing** → Draft a synthesis from collected findings
-4. **Peer Review** → Simulated review to find weaknesses
-5. **Replication** → Reproduce key claims from top papers
+1. **Block rewrites** — hand-audited replacements for the "Tool Discipline" / do-not-call blocks that
+   upstream uses to forbid the very tools Claude Code needs (`WebSearch`/`WebFetch`/`Task`), plus the
+   `alpha`-CLI and `subagent`-dispatch prose.
+2. **Tool map** — token-level Pi → Claude Code / alphaXiv MCP tool-name substitutions.
+3. **Phrase rewrites** — make the alphaXiv MCP the primary paper backend and the `alpha` CLI the fallback.
 
-## Output Conventions
+Prompts become `/feynman:*` commands; `.feynman/agents/*` become `feynman-*` subagents; `SYSTEM.md`
+becomes the `feynman` lead agent; skills are carried over and re-pointed at the MCP.
 
-All Feynman workflows follow consistent conventions:
+## Credits & License
 
-- **Slug-based naming:** derive a short slug from the topic (e.g., `sparse-scaling-laws`) for all files
-- **Output locations:**
-  - `outputs/` — research briefs, reviews, comparisons
-  - `papers/` — polished paper-style drafts
-  - `notes/` — session logs and scratch notes
-  - `outputs/.plans/` — research plans with task ledgers
-- **Provenance tracking:** deep research and lit reviews produce `.provenance.md` sidecars
-- **Sources required:** every output ends with a Sources section containing direct URLs
-
-## Differences from Pi-based Feynman
-
-This Copilot CLI package adapts Feynman's workflows with these changes:
-
-| Feature | Pi-based Feynman | Copilot CLI version |
-|---------|------------------|---------------------|
-| Subagents | Pi `subagent` tool | Copilot CLI task tool + custom agents |
-| Paper search | Built-in alpha tools | `alpha` CLI via bash (requires separate install) |
-| Charts | `pi-charts` package | Mermaid diagrams + markdown tables |
-| Memory | `pi-memory` package | Write to file on disk |
-| Scheduling | `pi-schedule-prompt` | Manual (cron/watch scripts) |
-| Background processes | `pi-processes` | Standard bash background processes |
-| Session search | Built-in search UI | Grep-based search of session JSONL |
-
-## Updating
-
-### Method 1 users
-
-```bash
-copilot plugin update feynman@feynman-copilot
-```
-
-### Method 2/3 users
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/Maverobot/feynman-copilot/main/install.sh | bash
-```
-
-## Uninstalling
-
-```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/Maverobot/feynman-copilot/main/uninstall.sh)
-```
-
-Or manually:
-
-```bash
-rm -rf ~/.copilot/skills/feynman
-rm -f ~/.copilot/agents/{feynman,researcher,reviewer,writer,verifier}.md
-rm -rf ~/.copilot/marketplace-cache/feynman-copilot
-# Remove the <!-- feynman-installed --> section from ~/.copilot/copilot-instructions.md
-```
-
-## Architecture
-
-```
-feynman-copilot/
-├── feynman/                    ← git submodule (upstream source of truth)
-├── generate.py                 ← reads feynman/, writes plugins/feynman/
-├── plugins/feynman/
-│   ├── skills/*/SKILL.md       ← generated, committed for native plugin install
-│   └── agents/*.md             ← generated, committed for native plugin install
-├── .github/plugin/
-│   └── marketplace.json        ← marketplace manifest for native plugin install
-├── install.sh                  ← clone + generate + symlink
-├── uninstall.sh
-└── README.md
-```
-
-### Tool substitutions applied by generate.py
-
-| Pi tool | Copilot CLI equivalent |
-|---------|----------------------|
-| `subagent` | `task` tool with custom agents |
-| `memory_remember` | Write to file on disk |
-| `pi-charts` | Mermaid diagrams in markdown |
-| `schedule_prompt` | Manual (cron/watch scripts) |
-| `init/run/log_experiment` | Bash scripts with git commits |
-| `fetch_content` | `web_fetch` tool |
-| `subagent_status` | `read_agent` tool |
-
-## Credits
-
-- **[Maverobot](https://github.com/Maverobot)** — Maintainer of feynman-copilot
-- **[Companion AI](https://github.com/getcompanion-ai)** — Creator of [Feynman](https://github.com/getcompanion-ai/feynman)
-- Copilot CLI packaging follows the pattern established by [DwainTR/superpowers-copilot](https://github.com/DwainTR/superpowers-copilot)
-
-## License
-
-MIT — Same as the original [Feynman](https://github.com/getcompanion-ai/feynman/blob/main/LICENSE)
+MIT. Upstream research agent: [companion-inc/feynman](https://github.com/companion-inc/feynman).
+Generator approach forked from [Maverobot/feynman-copilot](https://github.com/Maverobot/feynman-copilot)
+(GitHub Copilot CLI port) and retargeted to Claude Code + the alphaXiv MCP.

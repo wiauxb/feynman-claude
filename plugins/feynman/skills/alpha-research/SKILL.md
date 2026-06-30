@@ -1,11 +1,11 @@
 ---
 name: alpha-research
-description: Search, read, and query research papers via the `alpha` CLI (alphaXiv-backed). Use when the user asks about academic papers, wants to find research on a topic, needs to read a specific paper, ask questions about a paper, inspect a paper's code repository, or manage paper annotations.
+description: Search, read, and query research papers via the alphaXiv MCP tools. Use when the user asks about academic papers, wants to find research on a topic, needs to read a specific paper, ask questions about a paper, inspect a paper's code repository, or manage paper annotations.
 ---
 
 # Alpha Research CLI
 
-Use the `alpha` CLI via bash for all paper research operations.
+Use the alphaXiv MCP tools when they are available. For shell commands, use `alpha ...` as a fallback.
 
 ## Commands
 
@@ -22,7 +22,7 @@ Use the `alpha` CLI via bash for all paper research operations.
 
 ## Auth
 
-Run `alpha login` to authenticate with alphaXiv. Check status with `feynman alpha status`, or `alpha status` once your installed `alpha-hub` version includes it.
+Run `alpha login` to authenticate with alphaXiv. Check status with `alpha status`.
 
 ## Examples
 
@@ -37,6 +37,6 @@ alpha annotate 2106.09685 "Key paper on LoRA - revisit for adapter comparison"
 
 ## When to use
 
-- Academic paper search, reading, Q&A → `alpha`
+- Academic paper search, reading, Q&A → Feynman alpha tools or `feynman alpha`
 - Current topics (products, releases, docs) → web search tools
 - Mixed topics → combine both

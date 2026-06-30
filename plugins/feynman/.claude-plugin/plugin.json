@@ -1,17 +1,21 @@
 {
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "feynman",
-  "displayName": "Feynman",
-  "description": "Research-first AI agent skills: deep research, literature review, paper writing, peer review, code audits, and more",
-  "version": "1.0.0",
+  "description": "Research-first AI agent for Claude Code: deep research, literature review, paper writing, peer review, and reproducibility audits — backed by the alphaXiv MCP for academic paper search.",
+  "version": "0.1.0",
   "author": {
-    "name": "Maverobot",
-    "email": "zheng@maverobot.com"
+    "name": "wiauxb"
   },
-  "homepage": "https://github.com/getcompanion-ai/feynman",
-  "repository": "https://github.com/Maverobot/feynman-copilot",
+  "homepage": "https://www.feynman.is/",
   "license": "MIT",
-  "keywords": ["research", "papers", "literature-review", "deep-research", "peer-review", "academic", "arxiv"],
-  "skills": "./skills/",
-  "agents": "./agents/",
-  "commands": "./commands/"
+  "keywords": [
+    "research",
+    "papers",
+    "literature-review",
+    "deep-research",
+    "peer-review",
+    "academic",
+    "arxiv",
+    "alphaxiv"
+  ]
 }

@@ -3,14 +3,10 @@ name: paper-code-audit
 description: Compare a paper's claims against its public codebase. Use when the user asks to audit a paper, check code-claim consistency, verify reproducibility of a specific paper, or find mismatches between a paper and its implementation.
 ---
 
-Audit the paper and codebase for: $@
+# Paper-Code Audit
 
-Derive a short slug from the audit target (lowercase, hyphens, no filler words, ≤5 words). Use this slug for all files in this run.
+Run the `/audit` workflow. The slash command expands the full workflow instructions in the active session; do not try to read a relative prompt-template path from the installed skill directory.
 
-Requirements:
-- Before starting, outline the audit plan: which paper, which repo, which claims to check. Write the plan to `outputs/.plans/<slug>.md`. Present the plan to the user and confirm before proceeding.
-- Use the `researcher` subagent for evidence gathering and the `verifier` subagent to verify sources and add inline citations when the audit is non-trivial.
-- Compare claimed methods, defaults, metrics, and data handling against the actual code.
-- Call out missing code, mismatches, ambiguous defaults, and reproduction risks.
-- Save exactly one audit artifact to `outputs/<slug>-audit.md`.
-- End with a `Sources` section containing paper and repository URLs.
+Agents used: `feynman-researcher`, `feynman-verifier`
+
+Output: audit report in `outputs/`.

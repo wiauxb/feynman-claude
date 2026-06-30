@@ -1,0 +1,15 @@
+{
+  "name": "feynman-claude",
+  "description": "Feynman research agent, ported to Claude Code and backed by the alphaXiv MCP.",
+  "owner": {
+    "name": "wiauxb"
+  },
+  "plugins": [
+    {
+      "name": "feynman",
+      "source": "./plugins/feynman",
+      "description": "Research-first AI agent: deep research, literature review, paper writing, peer review, reproducibility audits — with the alphaXiv MCP for academic paper search.",
+      "version": "0.1.0"
+    }
+  ]
+}

@@ -3,16 +3,10 @@ name: paper-writing
 description: Turn research findings into a polished paper-style draft with sections, equations, and citations. Use when the user asks to write a paper, draft a report, write up findings, or produce a technical document from collected research.
 ---
 
-Write a paper-style draft for: $@
+# Paper Writing
 
-Derive a short slug from the topic (lowercase, hyphens, no filler words, ≤5 words). Use this slug for all files in this run.
+Run the `/draft` workflow. The slash command expands the full workflow instructions in the active session; do not try to read a relative prompt-template path from the installed skill directory.
 
-Requirements:
-- Before writing, outline the draft structure: proposed title, sections, key claims to make, source material to draw from, and a verification log for the critical claims, figures, and calculations. Write the outline to `outputs/.plans/<slug>.md`. Present the outline to the user and confirm before proceeding.
-- Use the `writer` subagent when the draft should be produced from already-collected notes, then use the `verifier` subagent to add inline citations and verify sources.
-- Include at minimum: title, abstract, problem statement, related work, method or synthesis, evidence or experiments, limitations, conclusion.
-- Use clean Markdown with LaTeX where equations materially help.
-- Generate charts using Mermaid diagram syntax in markdown. Use Mermaid for architectures and pipelines. Every figure needs a caption.
-- Before delivery, sweep the draft for any claim that sounds stronger than its support. Mark tentative results as tentative and remove unsupported numerics instead of letting the verifier discover them later.
-- Save exactly one draft to `papers/<slug>.md`.
-- End with a `Sources` appendix with direct URLs for all primary references.
+Agents used: `feynman-writer`, `feynman-verifier`
+
+Output: paper draft in `papers/`.

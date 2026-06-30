@@ -1,11 +1,11 @@
 ---
 name: modal-compute
-description: Run GPU workloads on Modal's serverless infrastructure. Use when the user needs remote GPU compute for training, inference, benchmarks, or batch processing and Modal CLI is available.
+description: Run explicitly chosen research benchmark or replication jobs on Modal's serverless infrastructure. Use when a Feynman research workflow needs burst remote GPU compute and the Modal CLI is available.
 ---
 
 # Modal Compute
 
-Use the `modal` CLI for serverless GPU workloads. No pod lifecycle to manage — write a decorated Python script and run it.
+Use the `modal` CLI for bounded research experiments that need burst GPU compute. No pod lifecycle to manage; write a decorated Python script, run it, and save raw outputs back into the research artifact folder. Do not use this skill to deploy services or unrelated batch jobs.
 
 ## Setup
 
@@ -18,12 +18,9 @@ modal setup
 
 | Command | Description |
 |---------|-------------|
-| `modal run script.py` | Run a script on Modal (ephemeral) |
-| `modal run --detach script.py` | Run detached (background) |
-| `modal deploy script.py` | Deploy persistently |
-| `modal serve script.py` | Serve with hot-reload (dev) |
-| `modal shell --gpu a100` | Interactive shell with GPU |
-| `modal app list` | List deployed apps |
+| `modal run script.py` | Run one research experiment script on Modal |
+| `modal run --detach script.py` | Run a long research experiment and record the returned app/run identifier |
+| `modal shell --gpu a100` | Open an interactive GPU shell for research environment debugging |
 
 ## GPU types
 
@@ -51,6 +48,6 @@ def main():
 
 ## When to use
 
-- Stateless burst GPU jobs (training, inference, benchmarks)
+- Bounded replication or benchmark jobs that need burst GPU
 - No persistent state needed between runs
 - Check availability: `command -v modal`

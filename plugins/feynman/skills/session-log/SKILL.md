@@ -3,12 +3,8 @@ name: session-log
 description: Write a durable session log capturing completed work, findings, open questions, and next steps. Use when the user asks to log progress, save session notes, write up what was done, or create a research diary entry.
 ---
 
-Write a session log for the current research work.
+# Session Log
 
-Requirements:
-- Summarize what was done in this session.
-- Capture the strongest findings or decisions.
-- List open questions, unresolved risks, and concrete next steps.
-- Reference any important artifacts written to `notes/`, `outputs/`, `experiments/`, or `papers/`.
-- If any external claims matter, include direct source URLs.
-- Save the log to `notes/` as markdown with a date-oriented filename.
+Run the `/log` workflow. The slash command expands the full workflow instructions in the active session; do not try to read a relative prompt-template path from the installed skill directory.
+
+Output: session log in `notes/session-logs/`.
